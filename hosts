@@ -1,0 +1,8 @@
+[CentOS]
+Centos_6		ansible_host=<IP>
+Centos_7		ansible_host=<IP>
+[Debian]
+Debian_9		ansible_host=<IP>
+Debian_10		ansible_host=<IP>
+[Amazon]
+AMI_2			ansible_host=<IP>

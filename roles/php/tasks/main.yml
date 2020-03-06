@@ -1,0 +1,85 @@
+---
+- block: ########################################## CentOS
+    - name: "Install php: {{ php_ver | replace('.','') }} CentOS"
+      yum: 
+          name:
+            - php{{ php_ver | replace('.','') }}
+            - php{{ php_ver | replace('.','') }}-php-mcrypt
+            - php{{ php_ver | replace('.','') }}-php-mbstring
+            - php{{ php_ver | replace('.','') }}-php-fpm
+            - php{{ php_ver | replace('.','') }}-php-gd
+            - php{{ php_ver | replace('.','') }}-php-xml
+            - php{{ php_ver | replace('.','') }}-php-pdo
+            - php{{ php_ver | replace('.','') }}-php-zip 
+          enablerepo: "remi" 
+          state: present
+    - name: replace user for nginx
+      replace:
+        dest: /etc/opt/remi/php{{ php_ver | replace('.','') }}/php-fpm.d/www.conf
+        regexp: '(user|group) = apache'
+        replace: '\1 = nginx'    
+    - name: Ensure php{{ php_ver | replace('.','') }}-php-fpm is running
+      service: name=php{{ php_ver | replace('.','') }}-php-fpm state=started enabled=yes
+      notify:
+        - restart php-fpm CentOS
+        - restart nginx
+
+  when: ansible_distribution == "CentOS"   
+  
+- block: ############################################ Debian
+    - name: "Install php: {{ php_ver }} Debian"
+      apt:
+        force_apt_get: yes
+        name:
+          - php{{ php_ver }}
+          - php{{ php_ver }}-mbstring
+          - php{{ php_ver }}-pdo
+          - php{{ php_ver }}-gd
+          - php{{ php_ver }}-mysql
+          - php{{ php_ver }}-xml
+          - php{{ php_ver }}-fpm
+        state: present
+    - name: replace user for nginx
+      replace:
+        dest: /etc/php/{{ php_ver }}/fpm/pool.d/www.conf
+        regexp: '(user|group) = apache'
+        replace: '\1 = nginx' 
+    - name: replace listen
+      replace:
+        dest: /etc/php/{{ php_ver }}/fpm/pool.d/www.conf
+        regexp: '(listen) = /run/php/php{{ php_ver }}-fpm.sock'
+        replace: '\1 = 127.0.0.1:9000'       
+    - name: Ensure php{{ php_ver }}-fpm is running
+      service: name=php{{ php_ver }}-fpm state=started enabled=yes
+      notify:
+        - restart php-fpm Debian
+        - restart nginx
+    - name: reload
+      command: "systemctl restart php{{ php_ver }}-fpm nginx"
+  when: ansible_distribution == "Debian"
+
+- block: ############################################# AMAZON
+    - name: "Install php: {{ php_ver }} Amazon"
+      shell: "amazon-linux-extras install php{{ php_ver }} -y"
+      become: yes
+    - name: install php and modules
+      yum: 
+          name: 
+             - php-fpm
+             - php-pdo
+             - php-mbstring
+             - php-xml
+             - php-gd 
+          state: present
+      become: yes
+    - name: replace user for nginx
+      replace:
+        dest: /etc/php-fpm.d/www.conf
+        regexp: '(user|group) = apache'
+        replace: '\1 = nginx'
+    - name: ensure php-fpm is running
+      service: name=php-fpm state=started enabled=yes
+      notify: 
+       - restart php-fpm AWS
+       - restart nginx
+  when: ansible_distribution == "Amazon"

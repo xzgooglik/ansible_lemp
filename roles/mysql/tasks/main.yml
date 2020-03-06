@@ -1,0 +1,39 @@
+---
+- block: ############################################### CentOS
+    - name: "Add Percona yum repository"
+      yum:
+        name: "https://repo.percona.com/yum/percona-release-latest.noarch.rpm"
+        state: present
+
+    - name: "Install percona-server {{ mysql_ver | replace('.','') }} CentOS"
+      yum:
+        name: "Percona-Server-server-{{ mysql_ver | replace('.','') }}"
+        state: present
+
+    - name: "Install MySQL-python package"
+      yum:
+        name: "MySQL-python"
+        state: present
+  when: ansible_distribution == "CentOS"
+
+
+- block: ################################################# Debian
+    - name: "Add Percona repo using wget"
+      command: "wget https://repo.percona.com/apt/percona-release_latest.{{ ansible_distribution_release }}_all.deb"
+    - name: dpkg
+      command: "dpkg -i percona-release_latest.{{ ansible_distribution_release }}_all.deb"
+    - name: install packages
+      apt:
+        force_apt_get:
+        name: 
+           - gnupg2
+           - python-mysqldb
+        state: present
+        update_cache: true
+
+    - name: "Install percona-server {{ mysql_ver }} Debian"
+      apt:
+        force_apt_get: yes
+        pkg: "percona-server-server-{{ mysql_ver }}"
+        state: present
+  when: ansible_distribution == "Debian"

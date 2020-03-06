@@ -1,0 +1,35 @@
+############################# roles: - common ######################
+- block:  #=========================== for CentOS =======================
+    - name: Add remi repo for CentOS
+      yum:
+       name: http://rpms.famillecollet.com/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
+       state: present
+    - name: Import remi GPG key.
+      rpm_key:
+       key: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+       state: present
+  when: ansible_distribution == "CentOS"
+
+- block:  #=========================== for Debian =======================
+    - name: Add dependencies for PHP versions Debian
+      apt:
+        force_apt_get: yes
+        name:
+          - software-properties-common
+          - gnupg
+          - apt-transport-https
+          - ca-certificates
+          - lsb-release
+        update_cache: true
+        state: present
+
+    - name: Import sury.org key Debian
+      apt_key:
+        url: 'https://packages.sury.org/php/apt.gpg'
+      become: yes
+
+    - name: Enable sury.org repo Debian
+      apt_repository:
+        repo: 'deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main'
+      become: yes
+  when: ansible_distribution == "Debian"
