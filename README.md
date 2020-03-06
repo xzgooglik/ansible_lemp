@@ -7,18 +7,16 @@ Ansible LEMP
 Installation
 ------------
 
-Platforms
----------
+Supports platforms:
+-------------------
 
-Supports all platforms:
-
-Amazon Linux 2
-CentOS versions: 6, 7 
-Debian versions: 9 (stretch), 10 (buster)
+- Amazon Linux 2
+- CentOS versions: 6, 7 
+- Debian versions: 9 (stretch), 10 (buster)
 
 Variables
 --------------
-This role has multiple variables. Package  variables are located in group_vars/all
+Package  variables are located in group_vars/all
 
 
 Run Playbook 
