@@ -4,9 +4,6 @@ Ansible LEMP
 - php: 7.0/7.1/7.2/7.3/7.4
 - mysql: 5.7
 
-Installation
-------------
-
 Supports platforms:
 -------------------
 
@@ -21,7 +18,7 @@ Package  variables are located in group_vars/all
 
 Run Playbook 
 ----------------------------------------------------------
-default setup: nginx: latest, php: 7.3, percona-mysql: 5.7
+*default setup: nginx: latest, php: 7.3, percona-mysql: 5.7*
 ```
 ansible-playbook lemp.yml
 ```
