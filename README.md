@@ -1,6 +1,8 @@
 Ansible LEMP
 ==================
-nginx php php-fpm mysql
+- nginx latest
+- php 7.0/7.1/7.2/7.3/7.4
+- mysql 5.7
 
 Installation
 ------------
@@ -25,9 +27,10 @@ Run Playbook (nginx: latest, php: 7.3, percona-mysql: 5.7)
 $ ansible-playbook lemp.yml
 
 Run Playbook using another package version:
+----------------------------------------------------------
  - php: 7.0/7.1/7.2/7.3/7.4
  - mysql: 5.7 (percona-mysql 8.0 - in the future)
-----------------------------------------------------------
+
 $ ansible-playbook lemp.yml -e php_ver=7.2 mysql_ver=5.7
 
 
