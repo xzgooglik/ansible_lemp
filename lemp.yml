@@ -3,7 +3,7 @@
   hosts: all #| CentOS | Debian | Amazon
 
   become: yes
-  become_method: sudo
+#  become_method: sudo
 
   roles:
   - common
