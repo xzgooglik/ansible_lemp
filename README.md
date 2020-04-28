@@ -35,3 +35,4 @@ Author Information
 ------------------
 
 [Dmitry Chernov](https://github.com/amiDMast)
+[Ihor Skripnichenko](https://github.com/xzgooglik)
